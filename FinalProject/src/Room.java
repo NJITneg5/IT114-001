@@ -1,4 +1,3 @@
-package firstJavaProject;
 
 import java.util.ArrayList;
 import java.util.Iterator;
