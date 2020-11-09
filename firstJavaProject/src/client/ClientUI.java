@@ -255,7 +255,7 @@ public class ClientUI extends JFrame implements Event {
     public void onClientConnect(String clientName, String message) {
 	log.log(Level.INFO, String.format("%s: %s", clientName, message));
 	addClient(clientName);
-	if (message != null && !message.isBlank()) {
+	if (message != null && message.trim().length() > 0) {
 	    self.addMessage(String.format("%s: %s", clientName, message));
 	}
     }
