@@ -259,7 +259,6 @@ public class ClientUI extends JFrame implements Event {
 	    self.addMessage(String.format("%s: %s", clientName, message));
 	}
     }
-    
 
     @Override
     public void onClientDisconnect(String clientName, String message) {
