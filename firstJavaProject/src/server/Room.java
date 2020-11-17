@@ -5,12 +5,18 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 public class Room implements AutoCloseable {
     private static SocketServer server;// used to refer to accessible server functions
     private String name;
     private final static Logger log = Logger.getLogger(Room.class.getName());
-
+    
+    private ScheduledThreadPoolExecutor exec = new ScheduledThreadPoolExecutor(3);
+    private boolean timeOut = false;
+    private boolean allAnswered = false;
+    
     // Commands
     private final static String COMMAND_TRIGGER = "/";
     private final static String CREATE_ROOM = "createroom";
@@ -191,5 +197,14 @@ public class Room implements AutoCloseable {
 	name = null;
 	// should be eligible for garbage collection now
     }
-
+    
+    public boolean roundTimeOut() {
+    	if(!allAnswered) {
+    		timeOut = false;
+    		exec.schedule(()->{
+    			timeOut = true;
+    		},30000, TimeUnit.MICROSECONDS);
+    	}
+    	return timeOut;
+    }
 }
