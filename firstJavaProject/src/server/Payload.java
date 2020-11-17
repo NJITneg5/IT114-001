@@ -48,6 +48,46 @@ public class Payload implements Serializable {
     public int getNumber() {
 	return this.number;
     }
+    
+    public boolean isReady;
+    
+    public void setReady(boolean r) {
+    	this.isReady = r;
+    }
+    
+    public boolean getReady() {
+    	return this.isReady;
+    }
+    
+    public int pick;
+    
+    public void setPick(int p) {
+    	this.pick = p;
+    }
+    
+    public int getPick() {
+    	return this.pick;
+    }
+    
+    public boolean pass;
+    
+    public void setPass(boolean p) {
+    	this.pass = p;
+    }
+    
+    public boolean getPass() {
+    	return this.pass;
+    }
+    
+    public int score;
+    
+    public void setScore(int s) {
+    	this.score = s;
+    }
+    
+    public int getScore() {
+    	return this.score;
+    }
 
     @Override
     public String toString() {
