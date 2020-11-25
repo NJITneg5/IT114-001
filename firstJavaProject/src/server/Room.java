@@ -13,14 +13,11 @@ public class Room implements AutoCloseable {
     private String name;
     private final static Logger log = Logger.getLogger(Room.class.getName());
     
-    private ScheduledThreadPoolExecutor exec = new ScheduledThreadPoolExecutor(3);
-    private boolean timeOut = false;
-    private boolean allAnswered = false;
-    
     // Commands
     private final static String COMMAND_TRIGGER = "/";
     private final static String CREATE_ROOM = "createroom";
     private final static String JOIN_ROOM = "joinroom";
+    private final static String READY = "ready";
 
     public Room(String name) {
 	this.name = name;
@@ -198,13 +195,4 @@ public class Room implements AutoCloseable {
 	// should be eligible for garbage collection now
     }
     
-    public boolean roundTimeOut() {
-    	if(!allAnswered) {
-    		timeOut = false;
-    		exec.schedule(()->{
-    			timeOut = true;
-    		},30000, TimeUnit.MICROSECONDS);
-    	}
-    	return timeOut;
-    }
 }
