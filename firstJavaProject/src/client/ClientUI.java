@@ -37,13 +37,15 @@ public class ClientUI extends JFrame implements Event {
     ClientUI self;
     JPanel textArea;
     JPanel userPanel;
+    GamePanel game;
     List<User> users = new ArrayList<User>();
     private final static Logger log = Logger.getLogger(ClientUI.class.getName());
-    Dimension windowSize = new Dimension(400, 400);
+    Dimension windowSize = new Dimension(1280, 640);
 
     public ClientUI(String title) {
 	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	setPreferredSize(windowSize);
+	setSize(windowSize);
 	setLocationRelativeTo(null);
 	self = this;
 	setTitle(title);
@@ -53,6 +55,7 @@ public class ClientUI extends JFrame implements Event {
 	createUserInputScreen();
 	createPanelRoom();
 	createPanelUserList();
+	createGamePanel();
 	showUI();
     }
 
@@ -64,7 +67,7 @@ public class ClientUI extends JFrame implements Event {
 	panel.add(hostLabel);
 	panel.add(host);
 	JLabel portLabel = new JLabel("Port:");
-	JTextField port = new JTextField("3000");
+	JTextField port = new JTextField("7777");
 	panel.add(portLabel);
 	panel.add(port);
 	JButton button = new JButton("Next");
@@ -134,6 +137,7 @@ public class ClientUI extends JFrame implements Event {
 	input.add(text);
 	JButton button = new JButton("Send");
 	text.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "sendAction");
+	
 	text.getActionMap().put("sendAction", new AbstractAction() {
 	    public void actionPerformed(ActionEvent actionEvent) {
 		button.doClick();
@@ -171,6 +175,14 @@ public class ClientUI extends JFrame implements Event {
 	textArea.getParent().getParent().getParent().add(scroll, BorderLayout.EAST);
     }
 
+    void createGamePanel() {
+    	game = new GamePanel();
+    	game.setPreferredSize(new Dimension(975,550));
+    	textArea.getParent().getParent().getParent().add(game, BorderLayout.WEST);
+    	
+    	
+    }
+    
     void addClient(String name) {
 	User u = new User(name);
 	Dimension p = new Dimension(userPanel.getSize().width, 30);
@@ -241,7 +253,7 @@ public class ClientUI extends JFrame implements Event {
 	SocketClient.callbackListener(this);
 	SocketClient.connectAndStart(host, port);
     }
-
+    
     void showUI() {
 	pack();
 	Dimension lock = textArea.getSize();

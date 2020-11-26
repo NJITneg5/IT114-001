@@ -5,16 +5,21 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 public class Room implements AutoCloseable {
     private static SocketServer server;// used to refer to accessible server functions
     private String name;
     private final static Logger log = Logger.getLogger(Room.class.getName());
-
+    
+    private static Trivia game;
+    
     // Commands
     private final static String COMMAND_TRIGGER = "/";
     private final static String CREATE_ROOM = "createroom";
     private final static String JOIN_ROOM = "joinroom";
+    private final static String START_GAME = "start";
 
     public Room(String name) {
 	this.name = name;
@@ -100,29 +105,42 @@ public class Room implements AutoCloseable {
 	boolean wasCommand = false;
 	try {
 	    if (message.indexOf(COMMAND_TRIGGER) > -1) {
-		String[] comm = message.split(COMMAND_TRIGGER);
-		log.log(Level.INFO, message);
-		String part1 = comm[1];
-		String[] comm2 = part1.split(" ");
-		String command = comm2[0];
-		if (command != null) {
-		    command = command.toLowerCase();
-		}
-		String roomName;
-		switch (command) {
-		case CREATE_ROOM:
-		    roomName = comm2[1];
-		    if (server.createNewRoom(roomName)) {
-			joinRoom(roomName, client);
-		    }
-		    wasCommand = true;
-		    break;
-		case JOIN_ROOM:
-		    roomName = comm2[1];
-		    joinRoom(roomName, client);
-		    wasCommand = true;
-		    break;
-		}
+	    	String[] comm = message.split(COMMAND_TRIGGER);
+	    	log.log(Level.INFO, message);
+	    	String part1 = comm[1];
+	    	String[] comm2 = part1.split(" ");
+	    	String command = comm2[0];
+	    	int extra = 0;
+	    	try {
+	    		extra = Integer.parseInt(comm2[1]); //if user doesn't put in a valid number, it defaults to 5 rounds.
+	    	}
+	    	catch(NumberFormatException e) {
+	    		extra = 5;
+	    	}
+	    	catch(ArrayIndexOutOfBoundsException e) {
+	    		extra = 5;
+	    	}//Used to get total round number
+	    	if (command != null) {
+	    		command = command.toLowerCase();
+	    	}
+	    	String roomName;
+	    	switch (command) {
+	    		case CREATE_ROOM:
+	    			roomName = comm2[1];
+	    			if (server.createNewRoom(roomName)) {
+	    				joinRoom(roomName, client);
+	    			}
+	    			wasCommand = true;
+	    			break;
+	    		case JOIN_ROOM:
+	    			roomName = comm2[1];
+	    			joinRoom(roomName, client);
+	    			wasCommand = true;
+	    			break;
+	    		case START_GAME:
+	    			startGame(extra);
+	    			break;
+	    	}
 	    }
 	}
 	catch (Exception e) {
@@ -191,5 +209,43 @@ public class Room implements AutoCloseable {
 	name = null;
 	// should be eligible for garbage collection now
     }
-
+    
+    protected void sendSystemMessage(String message) {
+    	Iterator<ServerThread> iter = clients.iterator();
+    	while (iter.hasNext()) {
+    	    ServerThread client = iter.next();
+    	    boolean messageSent = client.send("[Announcer]", message);
+    	    if (!messageSent) {
+    		iter.remove();
+    		log.log(Level.INFO, "Removed client " + client.getId());
+    	    }
+    	}
+    }
+    
+    protected void startGame(int round) {
+    	game = new Trivia(round);
+    	String roundCat;
+    	int catIndex;
+    	
+    	String roundQuest;
+    	int questIndex;
+    	
+    	String startMessage = "A game is starting with a total of " + round + " round(s)";
+    	sendSystemMessage(startMessage);
+    	
+    	int counter = 0;
+    	
+    	while(counter < round) {
+    		roundCat = game.getCategory();
+    		sendSystemMessage(roundCat);
+    		catIndex = game.getCatIndex();
+    		
+    		roundQuest = game.getQuestion(catIndex);
+    		sendSystemMessage(roundQuest);
+    		questIndex = game.getQuestIndex();
+    		
+    		counter++;
+    	}
+    	
+    }
 }
