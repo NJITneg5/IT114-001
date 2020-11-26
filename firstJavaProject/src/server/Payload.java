@@ -49,14 +49,14 @@ public class Payload implements Serializable {
 	return this.number;
     }
     
-    public boolean isReady;
+    public boolean start;
     
-    public void setReady(boolean r) {
-    	this.isReady = r;
+    public void setReady(boolean s) {
+    	this.start = s;
     }
     
     public boolean getReady() {
-    	return this.isReady;
+    	return this.start;
     }
     
     public int pick;
