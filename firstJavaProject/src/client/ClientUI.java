@@ -311,3 +311,5 @@ public class ClientUI extends JFrame implements Event {
 	}
     }
 }
+
+//This comment is to connect this to Github. This was for the most part provided by the professor
