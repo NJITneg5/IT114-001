@@ -210,7 +210,7 @@ public class Room implements AutoCloseable {
 	// should be eligible for garbage collection now
     }
     
-    protected void sendSystemMessage(String message) {
+    protected void sendSystemMessage(String message) { //Copied from Prof. Toegel
     	Iterator<ServerThread> iter = clients.iterator();
     	while (iter.hasNext()) {
     	    ServerThread client = iter.next();
@@ -230,6 +230,7 @@ public class Room implements AutoCloseable {
     	String roundQuest;
     	int questIndex;
     	
+    	//String[] roundAnswers = new String[5];
     	String startMessage = "A game is starting with a total of " + round + " round(s)";
     	sendSystemMessage(startMessage);
     	
@@ -244,6 +245,12 @@ public class Room implements AutoCloseable {
     		sendSystemMessage(roundQuest);
     		questIndex = game.getQuestIndex();
     		
+    		String[] roundAnswers = game.getAnswers(catIndex, questIndex);
+    		
+    		for(int i = 1; i < roundAnswers.length; i++)
+    		{
+    			sendSystemMessage(roundAnswers[i]);
+    		}
     		counter++;
     	}
     	
