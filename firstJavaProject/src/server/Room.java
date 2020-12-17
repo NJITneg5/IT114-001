@@ -222,36 +222,53 @@ public class Room implements AutoCloseable {
     	}
     }
     
-    protected void startGame(int round) {
-    	game = new Trivia(round);
+    protected void startGame(int totalRounds) {
+    	game = new Trivia(totalRounds);
     	String roundCat;
     	int catIndex;
     	
     	String roundQuest;
     	int questIndex;
     	
-    	//String[] roundAnswers = new String[5];
-    	String startMessage = "A game is starting with a total of " + round + " round(s)";
+    	String[] gameInfo = new String[9];
+    	String startMessage = "A game is starting with a total of " + totalRounds + " round(s)";
     	sendSystemMessage(startMessage);
     	
-    	int counter = 0;
+    	int round = 0;
     	
-    	while(counter < round) {
+    	gameInfo[0] = "" + totalRounds;
+    	while(round < totalRounds) {
+    		
+    		gameInfo[1] = "" + round;
     		roundCat = game.getCategory();
-    		sendSystemMessage(roundCat);
+    		//sendSystemMessage(roundCat);
+    		gameInfo[2] = roundCat;
     		catIndex = game.getCatIndex();
     		
     		roundQuest = game.getQuestion(catIndex);
-    		sendSystemMessage(roundQuest);
+    		//sendSystemMessage(roundQuest);
+    		gameInfo[3] = roundQuest;
     		questIndex = game.getQuestIndex();
     		
     		String[] roundAnswers = game.getAnswers(catIndex, questIndex);
     		
-    		for(int i = 1; i < roundAnswers.length; i++)
+    		for(int i = 0; i < roundAnswers.length; i++)
     		{
-    			sendSystemMessage(roundAnswers[i]);
+    			gameInfo[(i + 4)] = roundAnswers[i];
+    			//sendSystemMessage(roundAnswers[i]);
     		}
-    		counter++;
+    		
+    		Iterator<ServerThread> iter = clients.iterator();
+    		while (iter.hasNext()) {
+    			ServerThread client = iter.next();
+        	    boolean messageSent = client.sendGameInfo(gameInfo);
+        	    if (!messageSent) {
+        		iter.remove();
+        		log.log(Level.INFO, "Removed client " + client.getId());
+    		    }
+    		}
+    		
+    		//round++;
     	}
     	
     }

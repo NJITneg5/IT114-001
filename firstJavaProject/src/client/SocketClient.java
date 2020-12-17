@@ -41,13 +41,23 @@ public class SocketClient {
 	return payload;
     }
 
-    private static void sendPayload(Payload p) {
+    protected static boolean sendAnswer(boolean pick) {
+    	Payload payload = new Payload();
+    	payload.setPayloadType(PayloadType.PICK);
+    	payload.setClientName(clientName);
+    	payload.setPick(pick);
+    	return sendPayload(payload);
+    }
+    
+    private static boolean sendPayload(Payload p) {
 	try {
 	    out.writeObject(p);
+	    return true;
 	}
 	catch (IOException e) {
 	    // TODO Auto-generated catch block
 	    e.printStackTrace();
+	    return false;
 	}
     }
 
@@ -113,6 +123,11 @@ public class SocketClient {
 		event.onChangeRoom();
 	    }
 	    break;
+	case GAME_INFO:
+		if(event != null) {
+			event.onReceiveGameInfo(p.getGameInfo());
+		}
+		break;
 	default:
 	    log.log(Level.WARNING, "unhandled payload on client" + p);
 	    break;

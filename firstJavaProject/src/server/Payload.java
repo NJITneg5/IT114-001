@@ -49,23 +49,13 @@ public class Payload implements Serializable {
 	return this.number;
     }
     
-    public boolean start;
+    public boolean pick;
     
-    public void setReady(boolean s) {
-    	this.start = s;
-    }
-    
-    public boolean getReady() {
-    	return this.start;
-    }
-    
-    public int pick;
-    
-    public void setPick(int p) {
+    public void setPick(boolean p) {
     	this.pick = p;
     }
     
-    public int getPick() {
+    public boolean getPick() {
     	return this.pick;
     }
     
@@ -89,6 +79,16 @@ public class Payload implements Serializable {
     	return this.score;
     }
 
+    public String[] gameInfo;
+    
+    public void setGameInfo(String[] s) {
+    	this.gameInfo = s;
+    }
+    
+    public String[] getGameInfo() {
+    	return this.gameInfo;
+    }
+    
     @Override
     public String toString() {
 	return String.format("Type[%s], Number[%s], Message[%s]", getPayloadType().toString(), getNumber(),

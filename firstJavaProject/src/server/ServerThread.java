@@ -97,6 +97,13 @@ public class ServerThread extends Thread {
 	payload.setPayloadType(PayloadType.CLEAR_PLAYERS);
 	return sendPayload(payload);
     }
+    
+    protected boolean sendGameInfo(String[] info) {
+    	Payload payload = new Payload();
+    	payload.setPayloadType(PayloadType.GAME_INFO);
+    	payload.setGameInfo(info);
+    	return sendPayload(payload);
+    }
 
     private boolean sendPayload(Payload p) {
 	try {
@@ -139,6 +146,9 @@ public class ServerThread extends Thread {
 	    // we currently don't need to do anything since the UI/Client won't be sending
 	    // this
 	    break;
+	case PICK:
+		
+		break;
 	default:
 	    log.log(Level.INFO, "Unhandled payload on server: " + p);
 	    break;
