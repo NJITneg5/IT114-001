@@ -20,6 +20,8 @@ public class GamePanel extends JPanel{
 	private JLabel categoryText;
 	private JLabel roundCounter;
 	
+	private JPanel spacerWest;
+	
 	private JPanel questionsCenter;
 	private JLabel question;
 	private JLabel choiceA;
@@ -37,6 +39,9 @@ public class GamePanel extends JPanel{
     private boolean timeOut = false;
     private boolean allAnswered = false;
 	
+    private int correctAnswerSpot;
+    private boolean roundActive = false;
+    
 	public GamePanel() {
 		self = this;
 		border = new BorderLayout();
@@ -107,20 +112,56 @@ public class GamePanel extends JPanel{
 		public void actionPerformed(ActionEvent e) {
 			String actionCommand = e.getActionCommand();
 			
-			if(actionCommand.equals("Select A")) {
-				
+			if(actionCommand.equals("Select A")) { //1
+				if(roundActive) {
+					if(correctAnswerSpot == 1) {
+						SocketClient.sendAnswer(true);
+						roundActive = false;
+					}
+					else {
+						SocketClient.sendAnswer(false);
+						roundActive = false;
+					}
+				}
 			}
 			
-			if(actionCommand.equals("Select B")) {
-				
+			if(actionCommand.equals("Select B")) { //2
+				if(roundActive) {
+					if(correctAnswerSpot == 2) {
+						SocketClient.sendAnswer(true);
+						roundActive = false;
+					}
+					else {
+						SocketClient.sendAnswer(false);
+						roundActive = false;
+					}
+				}
 			}
 
-			if(actionCommand.equals("Select C")) {
-				
+			if(actionCommand.equals("Select C")) { //3
+				if(roundActive) {
+					if(correctAnswerSpot == 3) {
+						SocketClient.sendAnswer(true);
+						roundActive = false;
+					}
+					else {
+						SocketClient.sendAnswer(false);
+						roundActive = false;
+					}
+				}
 			}
 			
-			if(actionCommand.equals("Select D")) {
-				
+			if(actionCommand.equals("Select D")) { //4
+				if(roundActive) {
+					if(correctAnswerSpot == 4) {
+						SocketClient.sendAnswer(true);
+						roundActive = false;
+					}
+					else {
+						SocketClient.sendAnswer(false);
+						roundActive = false;
+					}
+				}
 			}
 		}
 	}
@@ -135,6 +176,30 @@ public class GamePanel extends JPanel{
 	    return timeOut;
 	}	
 	
+	public void buildRound(String[] gameInfo) {
+		
+		int totalRounds = Integer.parseInt(gameInfo[0]);
+		int round = Integer.parseInt(gameInfo[1]);
+		String roundCat = gameInfo[2];
+		String roundQuest = gameInfo[3];
+		int importedAnswerSpot = Integer.parseInt(gameInfo[4]);
+		String textA = gameInfo[5];
+		String textB = gameInfo[6];
+		String textC = gameInfo[7];
+		String textD = gameInfo[8];
+		
+		categoryText.setText("Category: " + roundCat);
+		roundCounter.setText("Round " + (round + 1) + " / " + totalRounds);
+		question.setText(roundQuest);
+		choiceA.setText("A: " + textA);
+		choiceB.setText("B: " + textB);
+		choiceC.setText("C: " + textC);
+		choiceD.setText("D: " + textD);
+		
+		correctAnswerSpot = importedAnswerSpot;
+		roundActive = true;
+		
+	}
 	
 }
 
