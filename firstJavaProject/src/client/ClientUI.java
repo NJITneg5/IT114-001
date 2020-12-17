@@ -303,6 +303,11 @@ public class ClientUI extends JFrame implements Event {
 	    iter.remove();
 	}
     }
+    
+    @Override
+    public void onReceiveGameInfo(String[] gameInfo) {
+    	game.buildRound(gameInfo);
+    }
 
     public static void main(String[] args) {
 	ClientUI ui = new ClientUI("My UI");
