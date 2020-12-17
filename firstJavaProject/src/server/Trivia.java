@@ -218,15 +218,15 @@ public class Trivia {
 		
 		boolean usedAll = false;
 		
-		double correctAnswerRand = Math.random() * (4 - 0 + 1);
-		int correctAnswerPlacement = (int)correctAnswerRand;
+		double correctAnswerRand = Math.random() * (3 - 0 + 1);
+		int correctAnswerPlacement = (int)correctAnswerRand + 1;
 		String[] returnArray = new String[5];
 		returnArray[0] = Integer.toString(correctAnswerPlacement);
 		returnArray[correctAnswerPlacement] = correctAnswer;
 		
 		while(!usedAll) {
-			double placeRand = Math.random() *(4 - 0 + 1);
-			int placement = (int)placeRand;
+			double placeRand = Math.random() *(3 - 0 + 1);
+			int placement = (int)placeRand + 1;
 			
 			if(returnArray[placement] == null) {
 				returnArray[placement] = wrongAnswers[wrongCounter];
